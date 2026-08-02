@@ -39,25 +39,9 @@ class RTCManager:
         self.opt = opt
         self.pcs: set = set()
 
-    async def handle_offer(self, request):
-        """处理 WebRTC offer 信令"""
-        params = await request.json()
-        offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
-
-        # 通过 SessionManager 构建（内部会检查 max_session）
-        try:
-            sessionid = await session_manager.create_session(params)
-        except MaxSessionError as e:
-            logger.warning("Rejecting offer: %s", e)
-            return web.Response(
-                content_type="application/json",
-                text=json.dumps({"code": -1, "msg": str(e)}),
-            )
-        logger.info('offer sessionid=%s', sessionid)
-        avatar_session = session_manager.get_session(sessionid)
-
-        # 创建 PeerConnection
-        ice_server = RTCIceServer(urls=self.opt.stun) #'stun:stun.freeswitch.org:3478'
+    async def _create_pc_and_answer(self, avatar_session, sessionid, offer):
+        """创建 PeerConnection、添加轨道、SDP 交换，返回已完成 answer 的 pc"""
+        ice_server = RTCIceServer(urls=self.opt.stun)
         pc = RTCPeerConnection(
             configuration=RTCConfiguration(iceServers=[ice_server])
         )
@@ -86,9 +70,29 @@ class RTCManager:
         transceiver.setCodecPreferences(preferences)
 
         await pc.setRemoteDescription(offer)
-
         answer = await pc.createAnswer()
         await pc.setLocalDescription(answer)
+
+        return pc
+
+    async def handle_offer(self, request):
+        """处理 WebRTC offer 信令"""
+        params = await request.json()
+        offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+
+        try:
+            sessionid = await session_manager.create_session(params)
+        except MaxSessionError as e:
+            logger.warning("Rejecting offer: %s", e)
+            return web.Response(
+                content_type="application/json",
+                text=json.dumps({"code": -1, "msg": str(e)}),
+            )
+        logger.info('offer sessionid=%s', sessionid)
+
+        pc = await self._create_pc_and_answer(
+            session_manager.get_session(sessionid), sessionid, offer
+        )
 
         return web.Response(
             content_type="application/json",
@@ -97,6 +101,44 @@ class RTCManager:
                 "type": pc.localDescription.type,
                 "sessionid": sessionid,
             }),
+        )
+
+    async def handle_whep(self, request):
+        """
+        处理 WHEP 信令（WebRTC HTTP Egress Protocol）
+
+        - 请求 body 为裸 SDP offer（Content-Type: application/sdp）
+        - 扩展参数通过 query string 传入（avatar, tts, tts_server 等）
+        - 返回 SDP answer（Content-Type: application/sdp）
+        - sessionid 通过 X-Session-ID 响应头返回
+        """
+        params = dict(request.query)
+        # 客户端可通过 query param 自定义 sessionid，不传则自动生成
+        client_sid = params.pop("sessionid", None)
+
+        offer_sdp = await request.text()
+        offer = RTCSessionDescription(sdp=offer_sdp, type="offer")
+
+        try:
+            sessionid = await session_manager.create_session(params, sessionid=client_sid)
+        except MaxSessionError as e:
+            logger.warning("Rejecting whep: %s", e)
+            return web.Response(
+                status=503,
+                content_type="text/plain",
+                text=str(e),
+            )
+        logger.info("whep sessionid=%s", sessionid)
+
+        pc = await self._create_pc_and_answer(
+            session_manager.get_session(sessionid), sessionid, offer
+        )
+
+        return web.Response(
+            status=201,
+            content_type="application/sdp",
+            text=pc.localDescription.sdp,
+            headers={"X-Session-ID": sessionid},
         )
 
     async def handle_rtcpush(self, push_url, sessionid: str):

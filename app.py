@@ -102,6 +102,9 @@ def build_avatar_session(sessionid:str, params:dict)->BaseAvatar:
 async def offer(request):
     return await rtc_manager.handle_offer(request)
 
+async def whep(request):
+    return await rtc_manager.handle_whep(request)
+
 async def on_shutdown(app):
     await rtc_manager.shutdown()
 
@@ -176,9 +179,9 @@ def main():
     appasync.on_shutdown.append(on_shutdown)
     appasync.router.add_post("/offer", offer)
     appasync.router.add_get("/record/{sessionid}", download_record)
-    
+
     # 注册 server/routes.py 中的通用 API 路由
-    setup_routes(appasync) 
+    setup_routes(appasync)
 
     # Configure default CORS settings.
     cors = aiohttp_cors.setup(appasync, defaults={
@@ -192,12 +195,12 @@ def main():
     for route in list(appasync.router.routes()):
         cors.add(route)
 
-    pagename='index.html'
-    if opt.transport=='rtmp':
-        pagename='rtmpapi.html'
-    elif opt.transport=='rtcpush':
-        pagename='rtcpushapi.html'
-    logger.info('start http server; http://<serverip>:'+str(opt.listenport)+'/'+pagename)
+    # /whep 注册在 CORS 之后：自行管理 OPTIONS，避免与 aiohttp_cors 冲突
+    whep_resource = appasync.router.add_resource('/whep')
+    whep_resource.add_route('POST', whep)
+    whep_resource.add_route('OPTIONS', lambda _: web.Response(status=200))
+
+    logger.info('start http server; http://<serverip>:'+str(opt.listenport))
     # logger.info('如果使用webrtc，推荐访问webrtc集成前端: http://<serverip>:'+str(opt.listenport)+'/dashboard.html')
     def run_server(runner):
         loop = asyncio.new_event_loop()

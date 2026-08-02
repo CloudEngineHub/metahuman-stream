@@ -63,7 +63,7 @@ Tested on Ubuntu 24.04, Python 3.12, PyTorch 2.9.1, CUDA 12.8.
 git clone https://github.com/lipku/LiveTalking.git 
 conda create -n livetalking python=3.12
 conda activate livetalking
-# If CUDA version is not 13.0 (check via nvidia-smi), install the corresponding PyTorch version(https://pytorch.org/get-started/previous-versions)
+# If CUDA version is not 12.8 (check via nvidia-smi), install the corresponding PyTorch version(https://pytorch.org/get-started/previous-versions)
 pip install torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu128
 cd LiveTalking
 pip install -r requirements.txt
@@ -203,12 +203,28 @@ Videos developed based on this project and published on platforms such as Bilibi
 
 ---
 
-If this project is helpful to you, please give it a Star. Contributors interested in improving this project are also welcome.
+## Citation
+
+If this repository helps your research or project, please cite our work.
+
+```
+@software{livetalking,
+  author = {Hengzhong Li},
+  title = {LiveTalking: Real-Time Interactive Streaming Digital Human Framework},
+  year = {2025},
+  publisher = {GitHub},
+  url = {https://github.com/lipku/livetalking}
+}
+```
+
+---
+
 
 | Community | Link |
 |-----------|------|
 | Knowledge Planet | <https://t.zsxq.com/7NMyO> |
 | WeChat | wxwubug (mention for group invite) |
+| WhatsApp | <https://wa.me/livetalking> |
 | Telegram | <https://t.me/livetalking> |
 | Discord | <https://discord.gg/n5jSPCT3Uf> |
 | Email | lipku@foxmail.com |

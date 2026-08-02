@@ -230,8 +230,20 @@ async def admin_sessions(request):
 
 # ─── 路由注册 ──────────────────────────────────────────────────────────────
 
+async def index(request):
+    """默认首页重定向"""
+    opt = request.app.get("opt")
+    pagename = 'index.html'
+    if opt and opt.transport == 'rtmp':
+        pagename = 'rtmpapi.html'
+    elif opt and opt.transport == 'rtcpush':
+        pagename = 'rtcpushapi.html'
+    raise web.HTTPFound(f'/{pagename}')
+
+
 def setup_routes(app):
     """注册所有路由到 aiohttp app"""
+    app.router.add_get("/", index)
     app.router.add_post("/human", human)
     app.router.add_post("/humanaudio", humanaudio)
     app.router.add_post("/set_audiotype", set_audiotype)

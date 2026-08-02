@@ -64,7 +64,7 @@ LiveTalking 基于实时流式数字人技术，通过文本或语音驱动虚�
 git clone https://github.com/lipku/LiveTalking.git 
 conda create -n livetalking python=3.12
 conda activate livetalking
-# 如果 CUDA 版本不为 13.0 (运行 nvidia-smi 确认)，请根据 PyTorch 官网(https://pytorch.org/get-started/previous-versions)安装对应版本
+# 如果 CUDA 版本不为 12.8 (运行 nvidia-smi 确认)，请根据 PyTorch 官网(https://pytorch.org/get-started/previous-versions)安装对应版本
 pip install torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu128
 cd LiveTalking
 pip install -r requirements.txt
@@ -207,13 +207,27 @@ python app.py --transport webrtc --model wav2lip --avatar_id wav2lip256_avatar1
 基于本项目开发并发布在B站、视频号、抖音等平台上的视频需带上 LiveTalking 水印和标识。
 
 ---
+## 引用
 
-如果本项目对你有帮助，帮忙点个 Star。也欢迎感兴趣的朋友一起来完善该项目。
+如果本项目对您有帮助，期待您能给一个 Star⭐和引用
+
+```
+@software{livetalking,
+  author = {Hengzhong Li},
+  title = {LiveTalking: Real-Time Interactive Streaming Digital Human Framework},
+  year = {2025},
+  publisher = {GitHub},
+  url = {https://github.com/lipku/livetalking}
+}
+```
+
+---
 
 | 社区 | 链接 |
 |------|------|
 | 知识星球 | <https://t.zsxq.com/7NMyO> |
 | 微信 | wxwubug (加群请备注) |
+| WhatsApp | <https://wa.me/livetalking> |
 | Telegram | <https://t.me/livetalking> |
 | Discord | <https://discord.gg/n5jSPCT3Uf> |
 | Email | lipku@foxmail.com |

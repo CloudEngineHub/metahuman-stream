@@ -12,9 +12,9 @@
 
 ---
 
-## 1. WebRTC Offer
+## 1. WebRTC Offer (JSON)
 
-交换 SDP 以建立 WebRTC 连接。
+交换 SDP 以建立 WebRTC 连接，扩展参数在 JSON body 中。
 
 ```
 POST /offer
@@ -31,7 +31,7 @@ POST /offer
 | `reftext` | 否 | string | — | 参考文本 |
 | `custom_config` | 否 | string | — | 动作编排配置 JSON 字符串 |
 
-**响应**:
+**响应** (200):
 
 ```json
 {
@@ -43,7 +43,68 @@ POST /offer
 
 ---
 
-## 2. 文本驱动 (Human)
+## 2. WebRTC Offer (WHEP)
+
+符合 [WHEP 协议](https://datatracker.ietf.org/doc/draft-ietf-wish-whep/)（WebRTC HTTP Egress Protocol）。
+SDP offer 以 `application/sdp` 裸文本发送，扩展参数通过 query string 传递。
+
+```
+POST /whep
+```
+
+**Content-Type**: `application/sdp`
+
+**Query 参数**:
+
+| 参数 | 必填 | 类型 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `avatar` | 否 | string | 启动参数值 | 指定数字人 ID |
+| `refaudio` | 否 | string | — | 参考音频 |
+| `reftext` | 否 | string | — | 参考文本 |
+| `tts` | 否 | string | — | TTS 引擎 |
+| `tts_server` | 否 | string | — | TTS 服务地址 |
+| `tts_speed` | 否 | number | — | TTS 语速 |
+| `custom_config` | 否 | string | — | 动作编排配置 JSON 字符串 |
+
+**Body**: SDP offer 裸文本，例如：
+
+```
+v=0\r\no=- 0 0 IN IP4 127.0.0.1\r\n...
+```
+
+**响应** (201):
+
+- `Content-Type`: `application/sdp`
+- `X-Session-ID`: 生成的会话 ID（UUID）
+
+Body 为 SDP answer 裸文本：
+
+```
+v=0\r\no=- ...\r\n...
+```
+
+**客户端示例**:
+
+```javascript
+const params = new URLSearchParams({
+  avatar: 'wav2lip256_avatar1',
+  refaudio: 'zh-CN-YunxiaNeural',
+});
+
+const res = await fetch('/whep?' + params.toString(), {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/sdp' },
+  body: pc.localDescription.sdp,
+});
+
+const answerSdp = await res.text();
+const sessionid = res.headers.get('X-Session-ID');
+await pc.setRemoteDescription({ type: 'answer', sdp: answerSdp });
+```
+
+---
+
+## 3. 文本驱动 (Human)
 
 发送文本驱动数字人说话，支持直接复读或 LLM 对话。
 
@@ -69,7 +130,7 @@ POST /human
 
 ---
 
-## 3. 音频驱动 (Human Audio)
+## 4. 音频驱动 (Human Audio)
 
 上传音频文件驱动数字人。
 
@@ -92,7 +153,7 @@ POST /humanaudio
 
 ---
 
-## 4. 打断播报
+## 5. 打断播报
 
 立即清空当前会话的音频队列。
 
@@ -112,7 +173,7 @@ POST /interrupt_talk
 
 ---
 
-## 5. 查询说话状态
+## 6. 查询说话状态
 
 ```
 POST /is_speaking
@@ -134,7 +195,7 @@ POST /is_speaking
 
 ---
 
-## 6. 录制控制
+## 7. 录制控制
 
 控制服务器端的渲染录制。
 
@@ -155,7 +216,7 @@ POST /record
 
 ---
 
-## 7. 下载录像
+## 8. 下载录像
 
 下载录制完成的 MP4 文件。
 
@@ -169,7 +230,7 @@ GET /record/{sessionid}
 
 ---
 
-## 8. 设置动作编排 (Audiotype)
+## 9. 设置动作编排 (Audiotype)
 
 ```
 POST /set_audiotype
@@ -188,7 +249,7 @@ POST /set_audiotype
 
 ---
 
-## 9. SSE 事件流
+## 10. SSE 事件流
 
 ```
 GET /sse?sessionid=<sessionid>
