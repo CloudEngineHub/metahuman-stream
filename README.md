@@ -16,11 +16,13 @@
 <a href="https://trendshift.io/repositories/12565" target="_blank"><img src="https://trendshift.io/api/badge/repositories/12565" alt="lipku%2FLiveTalking | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 </p>
 
+
 实时交互流式数字人引擎，实现音视频同步对话，已在业内获得广泛商用
 
 **效果演示**: [wav2lip](https://www.bilibili.com/video/BV1scwBeyELA/) | [ernerf](https://www.bilibili.com/video/BV1G1421z73r/) | [musetalk](https://www.bilibili.com/video/BV1bUwezvEnG/)
 
-国内镜像: <https://gitee.com/lipku/LiveTalking>
+国内镜像: [Gitee](https://gitee.com/lipku/LiveTalking) | [GitCode](https://gitcode.com/lipku/LiveTalking)
+
 
 ---
 
@@ -174,10 +176,9 @@ python app.py --transport webrtc --model wav2lip --avatar_id wav2lip256_avatar1
 ## 5. Docker 运行
 
 镜像说明:
-- **AutoDL**: <https://www.codewithgpu.com/i/lipku/livetalking/base> — [教程](https://doc.livetalking.ai/docs/autodl/)
-- **UCloud**: <https://www.compshare.cn/images/4458094e-a43d-45fe-9b57-de79253befe4?referral_code=3XW3852OBmnD089hMMrtuU&ytag=GPU_GitHub_livetalking> — 支持开放任意端口，无需额外部署 SRS — [教程](https://doc.livetalking.ai/docs/ucloud/)
+- **AutoDL**: <https://www.codewithgpu.com/i/lipku/livetalking/base>  
+- **UCloud**: <https://www.compshare.cn/images/4458094e-a43d-45fe-9b57-de79253befe4?referral_code=3XW3852OBmnD089hMMrtuU&ytag=GPU_GitHub_livetalking> — 支持开放任意端口 
 
-> AutoDL 由于不能开放 UDP 端口，需自行部署 SRS 或 TURN 转发服务。
 
 ---
 

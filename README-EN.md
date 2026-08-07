@@ -19,7 +19,7 @@ A real-time interactive streaming digital human engine enabling synchronized aud
 
 **Demos**: [wav2lip](https://youtu.be/-ss0H8qLr7E) | [ernerf](https://www.bilibili.com/video/BV1G1421z73r/) | [musetalk](https://youtu.be/vzUMruoZlxc/)
 
-Domestic Mirror: <https://gitee.com/lipku/LiveTalking>
+Domestic Mirror: [Gitee](https://gitee.com/lipku/LiveTalking) | [GitCode](https://gitcode.com/lipku/LiveTalking)
 
 ---
 
@@ -169,10 +169,9 @@ python app.py --transport webrtc --model wav2lip --avatar_id wav2lip256_avatar1
 ## 5. Docker
 
 Available images:
-- **AutoDL**: <https://www.codewithgpu.com/i/lipku/livetalking/base> — [Tutorial](https://doc.livetalking.ai/en/docs/autodl/)
-- **UCloud**: <https://www.compshare.cn/images/4458094e-a43d-45fe-9b57-de79253befe4?referral_code=3XW3852OBmnD089hMMrtuU&ytag=GPU_GitHub_livetalking> — Supports opening any port, no additional SRS deployment required — [Tutorial](https://doc.livetalking.ai/en/docs/ucloud/)
+- **AutoDL**: <https://www.codewithgpu.com/i/lipku/livetalking/base>  
+- **UCloud**: <https://www.compshare.cn/images/4458094e-a43d-45fe-9b57-de79253befe4?referral_code=3XW3852OBmnD089hMMrtuU&ytag=GPU_GitHub_livetalking> — Supports opening any port  
 
-> AutoDL cannot open UDP ports, so you need to deploy SRS or TURN relay service separately.
 
 ---
 
