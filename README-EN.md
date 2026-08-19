@@ -222,8 +222,7 @@ If this repository helps your research or project, please cite our work.
 | Community | Link |
 |-----------|------|
 | Knowledge Planet | <https://t.zsxq.com/7NMyO> |
-| WeChat | wxwubug (mention for group invite) |
-| WhatsApp | <https://wa.me/livetalking> |
+| WeChat | wxwubug  |
 | Telegram | <https://t.me/livetalking> |
 | Discord | <https://discord.gg/n5jSPCT3Uf> |
 | Email | lipku@foxmail.com |
